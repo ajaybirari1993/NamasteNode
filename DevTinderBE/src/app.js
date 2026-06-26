@@ -1,14 +1,18 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import bcrypt from "bcrypt";
-// import { adminAuth, userAuth } from "../src/middlewares/auth.js";
+import jwt from "jsonwebtoken";
+import { adminAuth, userAuth } from "../src/middlewares/auth.js";
 
 import connectDB from "./../src/config/database.js";
 import UserModel from "./models/user.js";
 
 const app = express();
 const PORT = 3000;
+const SCERET_KEY = "DEV@Tinder@1993";
 
 app.use(express.json());
+app.use(cookieParser());
 
 // ----------------------------------------- API creation
 
@@ -45,6 +49,11 @@ app.post("/login", async (req, res) => {
       return res.status(401).send("Invalid password!");
     }
 
+    const token = await jwt.sign({ _id: user._id }, SCERET_KEY, {
+      expiresIn: "1d",
+    });
+    res.cookie("token", token);
+
     res.send("User logged in successfully!");
   } catch (error) {
     res.status(500).send("Error logging in: " + error.message);
@@ -53,7 +62,7 @@ app.post("/login", async (req, res) => {
 
 // -----------------------------------------
 // get the user
-app.get("/user/:id", async (req, res) => {
+app.get("/user/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
 
   try {
@@ -70,7 +79,7 @@ app.get("/user/:id", async (req, res) => {
 
 // -----------------------------------------
 // get the all user
-app.get("/feed", async (req, res) => {
+app.get("/feed", userAuth, async (req, res) => {
   try {
     const user = await UserModel.find();
     res.send(user);
@@ -81,7 +90,7 @@ app.get("/feed", async (req, res) => {
 
 // -----------------------------------------
 // find by Id and delete the user
-app.delete("/user/:id", async (req, res) => {
+app.delete("/user/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
 
   try {
@@ -98,7 +107,7 @@ app.delete("/user/:id", async (req, res) => {
 
 // -----------------------------------------
 // Find by Id and update the user
-app.patch("/user/:id", async (req, res) => {
+app.patch("/user/:id", userAuth, async (req, res) => {
   const userId = req.params.id;
   const updateData = req.body;
   // Add api level validation here if needed like should allow only certain fields, or validate the data format before saving to the database
@@ -139,33 +148,17 @@ app.patch("/user/:id", async (req, res) => {
   }
 });
 
-// As it matches to ID as well keeping the both always calls the by ID not by Email
-// Find by email and update the user
-// app.patch("/user/:email", async (req, res) => {
-//   const userEmail = req.params.email;
-//   const updateData = req.body;
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
 
-//   console.log("Inside the by EMAIL");
+    res.send(user);
+  } catch (error) {
+    res.status(400).send("Error: " + error.message);
+  }
+});
 
-//   try {
-//     const updatedUser = await UserModel.findOneAndUpdate(
-//       { email: userEmail },
-//       updateData,
-//       { returnDocument: "after" },
-//     );
-
-//     if (!updatedUser) {
-//       return res.status(404).send("User not found with email: " + userEmail);
-//     } else {
-//       res.send(updatedUser);
-//     }
-//   } catch (error) {
-//     res.status(500).send("Error updating user: " + error.message);
-//   }
-// });
-
-// -----------------------------------------Database connection
-
+// DB Connection
 connectDB()
   .then(() => {
     console.log("Connected to MongoDB");
@@ -176,111 +169,3 @@ connectDB()
   .catch((error) => {
     console.error("Error connecting to MongoDB:", error);
   });
-
-// -----------------------------------------Error handling
-
-// app.use("/", (err, req, res, next) => {
-//   if (err) {
-//     res.status(500).send("Internal Server Error before: " + err.message);
-//   }
-// });
-
-// app.get("/getUser", (req, res) => {
-//   throw new Error("Something went wrong while fetching user data!");
-//   res.send("User data fetched successfully!");
-
-// try {
-//   // Simulating an error
-//   throw new Error("Something went wrong while fetching user data!");
-// } catch (error) {
-//   console.error("Error occurred:", error.message);
-//   res.status(500).send("Internal Server Error first: " + error.message);
-// }
-// });
-
-// app.use("/", (err, req, res, next) => {
-//   if (err) {
-//     res.status(500).send("Internal Server Error after: " + err.message);
-//   }
-// });
-
-// -----------------------------------------
-// app.use("/admin", adminAuth);
-
-// app.get("/admin/getAll", (req, res) => {
-//   res.send("Welcome to the admin panel!");
-// });
-
-// app.delete("/admin/deleteUser", (req, res) => {
-//   res.send("User deleted successfully!");
-// });
-
-// app.get("/user/getAllUser", userAuth, (req, res) => {
-//   const user = {
-//     id: 1,
-//     name: "Ajay Birari",
-//     profession: "Software Developer",
-//   };
-//   res.json(user);
-// });
-
-// app.get("/user/login", (req, res) => {
-//   res.send("User logged in successfully!");
-// });
-
-// -----------------------------------------
-// Multiple handlers
-// app.use("/test", [rh1, rh2], rh3, rh4);
-// app.use("/test", rh1, [rh2, rh3], rh4);
-
-// app.use(
-//   "/hello",
-//   (req, res, next) => {
-//     console.log("Hello from the middleware!");
-//     // res.send("Hello from the middleware!");
-//     next();
-//   },
-//   (req, res, next) => {
-//     console.log("This is the second callback function!");
-//     // res.send("This is the second callback function!");
-//     next();
-//   },
-// );
-
-// app.get("/", (req, res) => {
-//   res.send("Hello from Express!");
-// });
-
-// app.get("/ab*cd", (req, res) => {
-//   res.send("Welcome to the DevTinder API!");
-// });
-
-// -----------------------------------------
-
-// app.get("/user", (req, res) => {
-//   console.log("Query parameters:", req.query);
-//   const user = {
-//     id: 1,
-//     name: "Ajay Birari",
-//     profession: "Software Developer",
-//   };
-//   res.json(user);
-// });
-
-// app.post("/user", (req, res) => {
-//   res.send("User created successfully!");
-// });
-
-// app.delete("/user/:id", (req, res) => {
-//   const userId = req.params.id;
-//   res.send(`User with id ${userId} deleted successfully!`);
-// });
-
-// app.patch("/user/:id", (req, res) => {
-//   const userId = req.params.id;
-//   res.send(`User with id ${userId} updated successfully!`);
-// });
-
-// app.listen(PORT, () => {
-//   console.log("Server is running on port: " + PORT);
-// });
