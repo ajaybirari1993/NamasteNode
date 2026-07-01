@@ -7,8 +7,6 @@ import UserModel from "../models/user.js";
 
 const authRouter = express.Router();
 
-const SCERET_KEY = "DEV@Tinder@1993";
-
 // -----------------------------------------
 // create the user
 authRouter.post("/signup", async (req, res) => {
@@ -42,8 +40,8 @@ authRouter.post("/login", async (req, res) => {
       return res.status(401).send("Invalid password!");
     }
 
-    const token = await jwt.sign({ _id: user._id }, SCERET_KEY, {
-      expiresIn: "1d",
+    const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
     });
     res.cookie("token", token);
 
