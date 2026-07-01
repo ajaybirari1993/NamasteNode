@@ -47,7 +47,7 @@ const NavBar = () => {
                 <img
                   alt="Tailwind CSS Navbar component"
                   src={
-                    user.gender === "male"
+                    user.gender.toLowerCase() === "male"
                       ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwFOT4lfR0-YPWFK5rkm4YU_AIFQSPzGyF8NHnFNO_UA&s=10"
                       : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIYWkg9Nh_jRfYTDqkp_jTniVGjaCqmRZ03ooEoyIMxg&s=10"
                   }
