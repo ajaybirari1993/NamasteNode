@@ -1,8 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
+import cors from "cors";
 
 import connectDB from "./../src/config/database.js";
 // Routes
@@ -12,10 +11,6 @@ import profileRouter from "./routes/profile.js";
 import requestRouter from "./routes/request.js";
 import userRouter from "./routes/user.js";
 
-// const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// dotenv.config({ path: resolve(__dirname, "../.env") });
-
 dotenv.config();
 
 const app = express();
@@ -23,6 +18,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 app.use("/", authRouter);
 app.use("/profile", profileRouter);

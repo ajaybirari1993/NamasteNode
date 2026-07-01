@@ -43,9 +43,18 @@ authRouter.post("/login", async (req, res) => {
     const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
+
     res.cookie("token", token);
 
-    res.send("User logged in successfully!");
+    res.status(200).json({
+      message: "User logged in successfully!",
+      data: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        gender: user.gender,
+        email: user.email,
+      },
+    });
   } catch (error) {
     res.status(500).send("Error logging in: " + error.message);
   }
