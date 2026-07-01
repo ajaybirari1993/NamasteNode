@@ -48,12 +48,7 @@ authRouter.post("/login", async (req, res) => {
 
     res.status(200).json({
       message: "User logged in successfully!",
-      data: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        gender: user.gender,
-        email: user.email,
-      },
+      data: user,
     });
   } catch (error) {
     res.status(500).send("Error logging in: " + error.message);
