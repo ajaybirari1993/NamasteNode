@@ -3,6 +3,8 @@ import App from "../App";
 import Login from "../components/Login";
 import Profile from "../components/Profile";
 import Feed from "../components/Feed";
+import Connections from "../components/Connections";
+import Request from "../components/Request";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/connections",
+        element: <Connections />,
+      },
+      {
+        path: "/request",
+        element: <Request />,
       },
     ],
   },

@@ -21,7 +21,7 @@ function App() {
       });
 
       dispatch(addUser(res.data));
-      navigate("/");
+      // navigate("/");
     } catch (error) {
       if (error.status === 401) {
         navigate("/login");
@@ -39,7 +39,9 @@ function App() {
   return (
     <>
       <NavBar />
-      <Outlet />
+      <div className="my-20">
+        <Outlet />
+      </div>
       <Footer />
     </>
   );

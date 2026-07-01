@@ -4,7 +4,7 @@ import ConnectionRequestModel from "../models/connectionRequest.js";
 import UserModel from "../models/user.js";
 
 const userRouter = express.Router();
-const USER_DATA = ["firstName", "lastName", "gender"];
+const USER_DATA = ["firstName", "lastName", "gender", "age", "bio"];
 
 userRouter.get("/request/receive", userAuth, async (req, res) => {
   try {
