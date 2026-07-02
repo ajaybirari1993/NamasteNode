@@ -5,7 +5,7 @@ import axios from "axios";
 
 import { BASE_URL } from "../utils/constants";
 import UserCard from "./UserCard";
-import { addRequest } from "../utils/requestSlice";
+import { addRequest, removeRequest } from "../utils/requestSlice";
 
 const Request = () => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const Request = () => {
         {},
         { withCredentials: true },
       );
-      fetchUserRequests();
+      dispatch(removeRequest(userId));
     } catch (error) {
       console.log(error.response.data);
     }
