@@ -114,6 +114,13 @@ const Login = () => {
             Submit
           </button>
         </div>
+
+        <div
+          className="flex justify-end mt-2 cursor-pointer"
+          onClick={() => navigate("/signup")}
+        >
+          New User? Register here
+        </div>
       </div>
     </div>
   );

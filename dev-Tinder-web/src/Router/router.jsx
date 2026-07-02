@@ -5,6 +5,7 @@ import Profile from "../components/Profile";
 import Feed from "../components/Feed";
 import Connections from "../components/Connections";
 import Request from "../components/Request";
+import Signup from "../components/Signup";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Feed />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       },
       {
         path: "/login",
