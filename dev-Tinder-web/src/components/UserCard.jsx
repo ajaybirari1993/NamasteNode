@@ -1,4 +1,4 @@
-const UserCard = ({ user }) => {
+const UserCard = ({ user, cardFooter }) => {
   const { firstName, lastName, age, gender, bio } = user;
 
   return (
@@ -20,10 +20,8 @@ const UserCard = ({ user }) => {
           {age}
         </p>
         <p>{bio}</p>
-        <div className="card-actions justify-center items-center my-2">
-          <button className="btn  btn-primary">Ignore</button>
-          <button className="btn  btn-secondary">Interested</button>
-        </div>
+
+        {cardFooter && cardFooter(user._id)}
       </div>
     </div>
   );

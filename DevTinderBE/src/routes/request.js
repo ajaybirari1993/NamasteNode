@@ -80,7 +80,7 @@ requestRouter.post("/review/:status/:requestId", userAuth, async (req, res) => {
     }
 
     const connectionRequest = await ConnectionRequestModel.findOne({
-      _id: requestId,
+      fromUserId: requestId,
       toUserId: loggedInUserId,
       status: "interested",
     });

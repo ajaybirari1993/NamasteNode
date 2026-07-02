@@ -28,7 +28,16 @@ const Feed = () => {
 
   return (
     <div className="flex justify-center my-10 ">
-      {feed && <UserCard user={feed[0]} />}
+      {feed && <UserCard user={feed[0]} cardFooter={CardFooterButton} />}
+    </div>
+  );
+};
+
+const CardFooterButton = () => {
+  return (
+    <div className="card-actions justify-center items-center my-2">
+      <button className="btn  btn-primary">Ignore</button>
+      <button className="btn  btn-secondary">Interested</button>
     </div>
   );
 };
